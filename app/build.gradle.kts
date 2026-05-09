@@ -83,4 +83,7 @@ dependencies {
     //Coil dependency
     implementation(libs.coil.compose)
 
+    //Downloadable fonts
+    implementation(libs.androidx.compose.ui.text.google.fonts)
+
 }

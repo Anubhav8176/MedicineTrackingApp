@@ -19,8 +19,10 @@ navigation3Ui = "1.1.1"
 navigation3Runtime = "1.1.1"
 kotlinx-serialization = "1.7.1"
 navigationCompose = "2.9.8"
+uiTextGoogleFonts = "1.11.1"
 
 [libraries]
+androidx-compose-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtendedVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
