@@ -224,4 +224,4 @@ Distributed under the MIT License. See [`LICENSE`](LICENSE) for details.
 ## 📬 Contact
 
 Your Name · [@noobcoderrrr](https://x.com/noobcoderrrr) · thakuranubhav623@gmail.com  
-Project: [https://github.com/your-username/medicine-tracker](https://github.com/Anubhav8176/medicine-tracker)
+Project: [Medicine Tracker application](https://github.com/Anubhav8176/MedicineTrackingApp)
