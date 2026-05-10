@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,12 +48,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.anucodes.medicinetrackingapp.R
 import com.anucodes.medicinetrackingapp.ui.theme.AppColors
 
 @Composable
 fun LoginUser(
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    navController: NavHostController
 ){
     val isDarkTheme = isSystemInDarkTheme()
 
@@ -196,11 +199,12 @@ fun LoginUser(
                 Text(
                     text = "Already registered?"
                 )
+                Spacer(modifier = Modifier.width(5.dp))
                 Text(
                     modifier = Modifier
                         .clickable(
                             onClick = {
-
+                                navController.navigate("register_user")
                             }
                         ),
                     text = "Sign Up"
@@ -253,35 +257,62 @@ fun LoginUser(
                 modifier = Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.Center
             ) {
-                Icon(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = CircleShape
-                        )
-                        .padding(5.dp),
-                    painter = painterResource(R.drawable.ic_google),
-                    tint = Color.Unspecified,
-                    contentDescription = "google login"
-                )
 
-                Icon(
+                Row(
                     modifier = Modifier
-                        .clip(CircleShape)
+                        .clip(RoundedCornerShape(15.dp))
                         .border(
                             width = 1.dp,
                             color = Color.Black,
-                            shape = CircleShape
+                            shape = RoundedCornerShape(15.dp)
                         )
-                        .padding(5.dp),
-                    painter = painterResource(R.drawable.ic_facebook),
-                    tint = Color.Unspecified,
-                    contentDescription = "google login"
-                )
+                        .weight(1f)
+                        .padding(vertical = 5.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(35.dp),
+                        painter = painterResource(R.drawable.ic_google),
+                        tint = Color.Unspecified,
+                        contentDescription = "google login"
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "Google"
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .border(
+                            width = 1.dp,
+                            color = Color.Black,
+                            shape = RoundedCornerShape(15.dp)
+                        )
+                        .weight(1f)
+                        .padding(vertical = 5.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(35.dp),
+                        painter = painterResource(R.drawable.ic_facebook),
+                        tint = Color.Unspecified,
+                        contentDescription = "Facebook login"
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "Facebook"
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))

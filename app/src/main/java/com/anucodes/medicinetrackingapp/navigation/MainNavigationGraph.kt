@@ -1,4 +1,4 @@
-package com.anucodes.medicinetrackingapp.NavigationGraph
+package com.anucodes.medicinetrackingapp.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -28,7 +28,8 @@ fun MainNavigationGraph(
                 route = "register_user"
             ){
                 RegisterUser(
-                    innerPadding = innerPadding
+                    innerPadding = innerPadding,
+                    navController = navController
                 )
             }
 
@@ -36,7 +37,8 @@ fun MainNavigationGraph(
                 route = "login_user"
             ){
                 LoginUser(
-                    innerPadding = innerPadding
+                    innerPadding = innerPadding,
+                    navController = navController
                 )
             }
         }
