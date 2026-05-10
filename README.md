@@ -223,5 +223,5 @@ Distributed under the MIT License. See [`LICENSE`](LICENSE) for details.
 
 ## 📬 Contact
 
-Your Name · [@yourtwitter](https://twitter.com/yourtwitter) · email@example.com  
-Project: [https://github.com/your-username/medicine-tracker](https://github.com/your-username/medicine-tracker)
+Your Name · [@noobcoderrrr](https://x.com/noobcoderrrr) · thakuranubhav623@gmail.com  
+Project: [Medicine Tracker application](https://github.com/Anubhav8176/MedicineTrackingApp)
