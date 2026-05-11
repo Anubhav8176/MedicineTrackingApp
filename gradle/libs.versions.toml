@@ -1,5 +1,6 @@
 [versions]
 agp = "9.2.1"
+bomVersion = "VERSION"
 coreKtx = "1.18.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -49,6 +50,8 @@ postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3Ui" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3Runtime" }
 auth-kt = { module = "io.github.jan-tennert.supabase:auth-kt" }
+supabase-auth-kt = { module = "io.github.jan-tennert.supabase:auth-kt" }
+supabase-postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

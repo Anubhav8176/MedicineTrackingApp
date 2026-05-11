@@ -50,12 +50,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.anucodes.medicinetrackingapp.R
+import com.anucodes.medicinetrackingapp.core.authentication.model.LogInRequest
+import com.anucodes.medicinetrackingapp.core.authentication.viewmodel.AuthViewModel
 import com.anucodes.medicinetrackingapp.ui.theme.AppColors
 
 @Composable
 fun LoginUser(
     innerPadding: PaddingValues,
-    navController: NavHostController
+    navController: NavHostController,
+    authViewModel: AuthViewModel
 ){
     val isDarkTheme = isSystemInDarkTheme()
 
@@ -218,7 +221,12 @@ fun LoginUser(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 onClick = {
+                    val logInRequest = LogInRequest(
+                        email = email,
+                        password = password
+                    )
 
+                    authViewModel.loginUser(logInRequest)
                 }
             ) {
                 Text(

@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.anucodes.medicinetrackingapp.core.authentication.viewmodel.AuthViewModel
 import com.anucodes.medicinetrackingapp.presentation.authentication.LoginUser
 import com.anucodes.medicinetrackingapp.presentation.authentication.RegisterUser
 
@@ -14,7 +15,8 @@ import com.anucodes.medicinetrackingapp.presentation.authentication.RegisterUser
 fun MainNavigationGraph(
     innerPadding: PaddingValues,
     navController: NavHostController,
-    startDestination: String
+    startDestination: String,
+    authViewModel: AuthViewModel
 ){
     NavHost(
         navController = navController,
@@ -29,7 +31,8 @@ fun MainNavigationGraph(
             ){
                 RegisterUser(
                     innerPadding = innerPadding,
-                    navController = navController
+                    navController = navController,
+                    authViewModel = authViewModel
                 )
             }
 
@@ -38,7 +41,8 @@ fun MainNavigationGraph(
             ){
                 LoginUser(
                     innerPadding = innerPadding,
-                    navController = navController
+                    navController = navController,
+                    authViewModel = authViewModel
                 )
             }
         }

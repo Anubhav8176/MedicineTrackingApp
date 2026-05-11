@@ -52,14 +52,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.anucodes.medicinetrackingapp.R
+import com.anucodes.medicinetrackingapp.core.authentication.model.RegisterUserInfo
+import com.anucodes.medicinetrackingapp.core.authentication.viewmodel.AuthViewModel
 import com.anucodes.medicinetrackingapp.ui.theme.AppColors
 import com.anucodes.medicinetrackingapp.ui.theme.MedicineTrackingAppTheme
+import java.util.Calendar
 
 
 @Composable
 fun RegisterUser(
     innerPadding: PaddingValues,
-    navController: NavHostController
+    navController: NavHostController,
+    authViewModel: AuthViewModel
 ){
     val isDarkTheme = isSystemInDarkTheme()
 
@@ -237,6 +241,17 @@ fun RegisterUser(
                 shape = RoundedCornerShape(12.dp),
                 onClick = {
 
+                    val calendar = Calendar.getInstance()
+                    calendar.set(2000, Calendar.JANUARY, 15) // Year, Month, Day
+                    val dob = calendar.time
+                    val registerUserRequest = RegisterUserInfo(
+                        name = name,
+                        email = email,
+                        password = password,
+                        dob = dob,
+                        age = 28
+                    )
+                    authViewModel.createNewUser(registerUserRequest)
                 }
             ) {
                 Text(

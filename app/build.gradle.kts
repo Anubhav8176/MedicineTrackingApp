@@ -1,9 +1,15 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.serialization)
+}
+
+val localProps = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -22,6 +28,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "SUPABASE_URL",     "\"${localProps["SUPABASE_URL"]}\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY","\"${localProps["SUPABASE_ANON_KEY"]}\"")
     }
 
     buildTypes {
@@ -39,6 +48,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -85,5 +95,14 @@ dependencies {
 
     //Downloadable fonts
     implementation(libs.androidx.compose.ui.text.google.fonts)
+
+    //Supabase dependency
+    implementation(platform(libs.bom))
+    implementation(libs.supabase.postgrest.kt)
+    implementation(libs.supabase.auth.kt)
+
+
+    //K-tor
+    implementation(libs.ktor.client.engine.z)
 
 }
