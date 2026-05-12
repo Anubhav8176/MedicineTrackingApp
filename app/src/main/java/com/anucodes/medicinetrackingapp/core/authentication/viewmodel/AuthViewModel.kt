@@ -114,6 +114,10 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun updateAuthState(){
+        _authResponse.value = AuthResponse.Idle
+    }
+
     fun mapToUserInfo(session: UserSession): UserDetails {
         val user = session.user
 

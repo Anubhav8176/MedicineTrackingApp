@@ -9,21 +9,22 @@ import androidx.navigation.compose.navigation
 import com.anucodes.medicinetrackingapp.core.authentication.viewmodel.AuthViewModel
 import com.anucodes.medicinetrackingapp.presentation.authentication.LoginUser
 import com.anucodes.medicinetrackingapp.presentation.authentication.RegisterUser
+import com.anucodes.medicinetrackingapp.presentation.core.HomeScreen
 
 
 @Composable
 fun MainNavigationGraph(
     innerPadding: PaddingValues,
     navController: NavHostController,
-    startDestination: String,
+    startGraph: String,
     authViewModel: AuthViewModel
 ){
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = startGraph
     ){
         navigation(
-            route = startDestination,
+            route = "auth_graph",
             startDestination = "login_user"
         ){
             composable (
@@ -45,6 +46,20 @@ fun MainNavigationGraph(
                     authViewModel = authViewModel
                 )
             }
+        }
+        navigation(
+            route = "home_graph",
+            startDestination = "home_screen"
+        ){
+
+            composable(
+                route = "home_screen"
+            ){
+                HomeScreen(
+                    navController = navController
+                )
+            }
+
         }
     }
 }

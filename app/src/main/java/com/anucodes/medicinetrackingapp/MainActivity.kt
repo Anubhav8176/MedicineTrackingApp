@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.anucodes.medicinetrackingapp.core.authentication.viewmodel.AuthViewModel
@@ -24,14 +26,16 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val navController = rememberNavController()
-            val startDestination = "auth_graph"
+            val currentUser by authViewModel.userInfo.collectAsState()
+
+            val startGraph = if(currentUser!=null) "home_graph" else "auth_graph"
 
             MedicineTrackingAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainNavigationGraph(
                         innerPadding = innerPadding,
                         navController = navController,
-                        startDestination = startDestination,
+                        startGraph = startGraph,
                         authViewModel = authViewModel
                     )
                 }

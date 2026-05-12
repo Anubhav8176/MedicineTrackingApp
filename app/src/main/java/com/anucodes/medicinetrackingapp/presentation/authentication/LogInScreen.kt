@@ -1,5 +1,6 @@
 package com.anucodes.medicinetrackingapp.presentation.authentication
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -50,8 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.anucodes.medicinetrackingapp.R
+import com.anucodes.medicinetrackingapp.core.authentication.model.AuthResponse
 import com.anucodes.medicinetrackingapp.core.authentication.model.LogInRequest
 import com.anucodes.medicinetrackingapp.core.authentication.viewmodel.AuthViewModel
+import com.anucodes.medicinetrackingapp.presentation.shared.CircularLoadingBar
 import com.anucodes.medicinetrackingapp.ui.theme.AppColors
 
 @Composable
@@ -61,10 +67,36 @@ fun LoginUser(
     authViewModel: AuthViewModel
 ){
     val isDarkTheme = isSystemInDarkTheme()
+    val context = LocalContext.current
 
     var email by remember { mutableStateOf("") }
     var password by remember {mutableStateOf("")}
     var passwordVisibility by remember { mutableStateOf(false) }
+
+    val authState by authViewModel.authResponse.collectAsState()
+
+    when(authState){
+        is AuthResponse.Failure -> {
+            Toast.makeText(context, (authState as AuthResponse.Failure).message, Toast.LENGTH_SHORT).show()
+            authViewModel.updateAuthState()
+        }
+        is AuthResponse.Success -> {
+            navController.navigate("home_graph"){
+                popUpTo(navController.graph.startDestinationId){
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
+            authViewModel.updateAuthState()
+        }
+        is AuthResponse.Loading ->{
+            //Show overlay loading
+            CircularLoadingBar(isVisible = true)
+        }
+        else -> {
+
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -277,7 +309,12 @@ fun LoginUser(
                             shape = RoundedCornerShape(15.dp)
                         )
                         .weight(1f)
-                        .padding(vertical = 5.dp),
+                        .padding(vertical = 5.dp)
+                        .clickable(
+                            onClick = {
+
+                            }
+                        ),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -305,7 +342,12 @@ fun LoginUser(
                             shape = RoundedCornerShape(15.dp)
                         )
                         .weight(1f)
-                        .padding(vertical = 5.dp),
+                        .padding(vertical = 5.dp)
+                        .clickable(
+                            onClick = {
+
+                            }
+                        ),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
