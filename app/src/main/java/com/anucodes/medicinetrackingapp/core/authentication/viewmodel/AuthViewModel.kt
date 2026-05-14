@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import java.text.ParseException
 import java.util.Date
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
@@ -92,12 +93,13 @@ class AuthViewModel @Inject constructor(
                     _userInfo.value = user
                     _authResponse.value = AuthResponse.Success("Login successful!")
                 }else{
-                    _authResponse.value = AuthResponse.Failure("Login failed!")
+                    _authResponse.value = AuthResponse.Failure("No login session found!")
                 }
 
             }catch (e: RestException){
                 _authResponse.value = AuthResponse.Failure(e.message.toString())
             }catch (e: Exception){
+                Log.e("Error in login!", "The error is: ${e.message}")
                 _authResponse.value = AuthResponse.Failure("Login failed!")
             }
         }
@@ -120,21 +122,31 @@ class AuthViewModel @Inject constructor(
 
     fun mapToUserInfo(session: UserSession): UserDetails {
         val user = session.user
+        val metadata = user?.userMetadata
 
         return UserDetails(
             id = user?.id ?: "",
-            name = user?.userMetadata?.get("name").toString(),
+            name = metadata?.get("name").toString().removeSurrounding("\""),
             email = user?.email ?: "",
-            dateOfBirth = user?.userMetadata?.get("date_of_birth").toString().toDate(),
-            age = user?.userMetadata?.get("age").toString().toInt(),
+            dateOfBirth = metadata?.get("date_of_birth").toString().toDate(),
+            age = metadata?.get("age").toString().removeSurrounding("\"").toIntOrNull() ?: 0,
             isEmailVerified = user?.emailConfirmedAt != null,
-            createdAt = user?.createdAt?.toDate(),
-            updatedAt = user?.updatedAt?.toDate()
+            createdAt = user?.createdAt?.toString().toDate(),
+            updatedAt = user?.updatedAt?.toString().toDate()
         )
     }
 
-    fun String.toDate(format: String = "yyyy-MM-dd"): Date {
-        return SimpleDateFormat(format, Locale.getDefault()).parse(this) ?: Date()
+    fun String?.toDate(format: String = "yyyy-MM-dd"): Date? {
+        if (this == null) return null
+        val cleaned = this.trim().removeSurrounding("\"")
+
+        if (cleaned.isBlank() || cleaned == "null") return null
+
+        return try {
+            SimpleDateFormat(format, Locale.getDefault()).parse(cleaned)
+        } catch (e: ParseException) {
+            null
+        }
     }
 
     fun Instant.toDate(): Date {
