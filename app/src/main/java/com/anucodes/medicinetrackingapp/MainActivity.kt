@@ -1,6 +1,7 @@
 package com.anucodes.medicinetrackingapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,8 +12,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.anucodes.medicinetrackingapp.core.authentication.model.AuthState
 import com.anucodes.medicinetrackingapp.core.authentication.viewmodel.AuthViewModel
 import com.anucodes.medicinetrackingapp.navigation.MainNavigationGraph
+import com.anucodes.medicinetrackingapp.presentation.authentication.SplashScreen
 import com.anucodes.medicinetrackingapp.ui.theme.MedicineTrackingAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,18 +29,37 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val navController = rememberNavController()
-            val currentUser by authViewModel.userInfo.collectAsState()
-
-            val startGraph = if(currentUser!=null) "home_graph" else "auth_graph"
+            val authState by authViewModel.authState.collectAsState()
 
             MedicineTrackingAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainNavigationGraph(
-                        innerPadding = innerPadding,
-                        navController = navController,
-                        startGraph = startGraph,
-                        authViewModel = authViewModel
-                    )
+
+                    when (authState) {
+                        is AuthState.Loading -> {
+                            Log.i("Current User: ", "In loading, AuthState: $authState")
+                            SplashScreen()
+                        }
+
+                        is AuthState.Authenticated -> {
+                            Log.i("Current User: ", "In Authenticated, AuthState: $authState")
+                            MainNavigationGraph(
+                                innerPadding = innerPadding,
+                                navController = navController,
+                                startGraph = "home_graph",
+                                authViewModel = authViewModel
+                            )
+                        }
+
+                        is AuthState.Unauthenticated -> {
+                            Log.i("Current User: ", "In unauthenticated, AuthState: $authState")
+                            MainNavigationGraph(
+                                innerPadding = innerPadding,
+                                navController = navController,
+                                startGraph = "auth_graph",
+                                authViewModel = authViewModel
+                            )
+                        }
+                    }
                 }
             }
         }

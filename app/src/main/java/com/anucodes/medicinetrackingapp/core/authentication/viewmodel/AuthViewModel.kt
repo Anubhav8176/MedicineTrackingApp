@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anucodes.medicinetrackingapp.core.authentication.model.AuthResponse
+import com.anucodes.medicinetrackingapp.core.authentication.model.AuthState
 import com.anucodes.medicinetrackingapp.core.authentication.model.LogInRequest
 import com.anucodes.medicinetrackingapp.core.authentication.model.RegisterUserInfo
 import com.anucodes.medicinetrackingapp.core.models.UserDetails
@@ -40,6 +41,9 @@ class AuthViewModel @Inject constructor(
 
     private val _userInfo = MutableStateFlow<UserDetails?>(null)
     val userInfo = _userInfo.asStateFlow()
+
+    private val _authState = MutableStateFlow<AuthState>(AuthState.Loading)
+    val authState = _authState.asStateFlow()
 
     init {
         getCurrentUser()
@@ -99,21 +103,35 @@ class AuthViewModel @Inject constructor(
             }catch (e: RestException){
                 _authResponse.value = AuthResponse.Failure(e.message.toString())
             }catch (e: Exception){
-                Log.e("Error in login!", "The error is: ${e.message}")
                 _authResponse.value = AuthResponse.Failure("Login failed!")
             }
         }
     }
 
     fun getCurrentUser(){
-        val session = supabaseAuth.currentSessionOrNull()
 
-        if(session != null){
-            val user = mapToUserInfo(session)
-            _userInfo.value = user
-        }else{
-            Log.i("Current User: ", "Failed to fetch the user")
+        viewModelScope.launch {
+            val session = supabaseAuth.currentSessionOrNull()
+            _authState.value = if (session != null) {
+                AuthState.Authenticated(mapToUserInfo(session))
+            } else {
+                AuthState.Unauthenticated
+            }
         }
+
+//        viewModelScope.launch {
+//            val session = supabaseAuth.currentSessionOrNull()
+//
+//            Log.i("Session from local", "Session: ")
+//
+//            if(session != null){
+//                val user = mapToUserInfo(session)
+//                _userInfo.value = user
+//                Log.i("Current User: ", "User is: $user")
+//            }else{
+//                Log.i("Current User: ", "Failed to fetch the user")
+//            }
+//        }
     }
 
     fun updateAuthState(){
