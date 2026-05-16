@@ -36,12 +36,10 @@ class MainActivity : ComponentActivity() {
 
                     when (authState) {
                         is AuthState.Loading -> {
-                            Log.i("Current User: ", "In loading, AuthState: $authState")
                             SplashScreen()
                         }
 
                         is AuthState.Authenticated -> {
-                            Log.i("Current User: ", "In Authenticated, AuthState: $authState")
                             MainNavigationGraph(
                                 innerPadding = innerPadding,
                                 navController = navController,
@@ -51,7 +49,6 @@ class MainActivity : ComponentActivity() {
                         }
 
                         is AuthState.Unauthenticated -> {
-                            Log.i("Current User: ", "In unauthenticated, AuthState: $authState")
                             MainNavigationGraph(
                                 innerPadding = innerPadding,
                                 navController = navController,

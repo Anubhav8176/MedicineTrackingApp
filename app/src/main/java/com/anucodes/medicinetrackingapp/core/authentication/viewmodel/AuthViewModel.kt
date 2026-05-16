@@ -108,30 +108,20 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentUser(){
-
+    fun getCurrentUser() {
         viewModelScope.launch {
+            _authState.value = AuthState.Loading
+
+            supabaseAuth.awaitInitialization()
+
             val session = supabaseAuth.currentSessionOrNull()
+
             _authState.value = if (session != null) {
                 AuthState.Authenticated(mapToUserInfo(session))
             } else {
                 AuthState.Unauthenticated
             }
         }
-
-//        viewModelScope.launch {
-//            val session = supabaseAuth.currentSessionOrNull()
-//
-//            Log.i("Session from local", "Session: ")
-//
-//            if(session != null){
-//                val user = mapToUserInfo(session)
-//                _userInfo.value = user
-//                Log.i("Current User: ", "User is: $user")
-//            }else{
-//                Log.i("Current User: ", "Failed to fetch the user")
-//            }
-//        }
     }
 
     fun updateAuthState(){
