@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anucodes.medicinetrackingapp.core.authentication.model.AuthResponse
+import com.anucodes.medicinetrackingapp.core.authentication.model.AuthState
 import com.anucodes.medicinetrackingapp.core.authentication.model.LogInRequest
 import com.anucodes.medicinetrackingapp.core.authentication.model.RegisterUserInfo
 import com.anucodes.medicinetrackingapp.core.models.UserDetails
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import java.text.ParseException
 import java.util.Date
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
@@ -39,6 +41,9 @@ class AuthViewModel @Inject constructor(
 
     private val _userInfo = MutableStateFlow<UserDetails?>(null)
     val userInfo = _userInfo.asStateFlow()
+
+    private val _authState = MutableStateFlow<AuthState>(AuthState.Loading)
+    val authState = _authState.asStateFlow()
 
     init {
         getCurrentUser()
@@ -92,7 +97,7 @@ class AuthViewModel @Inject constructor(
                     _userInfo.value = user
                     _authResponse.value = AuthResponse.Success("Login successful!")
                 }else{
-                    _authResponse.value = AuthResponse.Failure("Login failed!")
+                    _authResponse.value = AuthResponse.Failure("No login session found!")
                 }
 
             }catch (e: RestException){
@@ -103,34 +108,53 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun getCurrentUser(){
-        val session = supabaseAuth.currentSessionOrNull()
+    fun getCurrentUser() {
+        viewModelScope.launch {
+            _authState.value = AuthState.Loading
 
-        if(session != null){
-            val user = mapToUserInfo(session)
-            _userInfo.value = user
-        }else{
-            Log.i("Current User: ", "Failed to fetch the user")
+            supabaseAuth.awaitInitialization()
+
+            val session = supabaseAuth.currentSessionOrNull()
+
+            _authState.value = if (session != null) {
+                AuthState.Authenticated(mapToUserInfo(session))
+            } else {
+                AuthState.Unauthenticated
+            }
         }
+    }
+
+    fun updateAuthState(){
+        _authResponse.value = AuthResponse.Idle
     }
 
     fun mapToUserInfo(session: UserSession): UserDetails {
         val user = session.user
+        val metadata = user?.userMetadata
 
         return UserDetails(
             id = user?.id ?: "",
-            name = user?.userMetadata?.get("name").toString(),
+            name = metadata?.get("name").toString().removeSurrounding("\""),
             email = user?.email ?: "",
-            dateOfBirth = user?.userMetadata?.get("date_of_birth").toString().toDate(),
-            age = user?.userMetadata?.get("age").toString().toInt(),
+            dateOfBirth = metadata?.get("date_of_birth").toString().toDate(),
+            age = metadata?.get("age").toString().removeSurrounding("\"").toIntOrNull() ?: 0,
             isEmailVerified = user?.emailConfirmedAt != null,
-            createdAt = user?.createdAt?.toDate(),
-            updatedAt = user?.updatedAt?.toDate()
+            createdAt = user?.createdAt?.toString().toDate(),
+            updatedAt = user?.updatedAt?.toString().toDate()
         )
     }
 
-    fun String.toDate(format: String = "yyyy-MM-dd"): Date {
-        return SimpleDateFormat(format, Locale.getDefault()).parse(this) ?: Date()
+    fun String?.toDate(format: String = "yyyy-MM-dd"): Date? {
+        if (this == null) return null
+        val cleaned = this.trim().removeSurrounding("\"")
+
+        if (cleaned.isBlank() || cleaned == "null") return null
+
+        return try {
+            SimpleDateFormat(format, Locale.getDefault()).parse(cleaned)
+        } catch (e: ParseException) {
+            null
+        }
     }
 
     fun Instant.toDate(): Date {

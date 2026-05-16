@@ -6,7 +6,7 @@ data class UserDetails(
     val id: String,
     val name: String,
     val email: String,
-    val dateOfBirth: Date,
+    val dateOfBirth: Date?,
     val age: Int,
     val profilePictureUrl: String? = null,
     val phoneNumber: String? = null,
