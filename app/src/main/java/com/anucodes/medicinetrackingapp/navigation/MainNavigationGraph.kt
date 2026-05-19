@@ -9,7 +9,8 @@ import androidx.navigation.compose.navigation
 import com.anucodes.medicinetrackingapp.core.authentication.viewmodel.AuthViewModel
 import com.anucodes.medicinetrackingapp.presentation.authentication.LoginUser
 import com.anucodes.medicinetrackingapp.presentation.authentication.RegisterUser
-import com.anucodes.medicinetrackingapp.presentation.core.HomeScreen
+import com.anucodes.medicinetrackingapp.presentation.core.MainAppScreen
+import com.anucodes.medicinetrackingapp.presentation.core.MedicationScreen
 
 
 @Composable
@@ -55,9 +56,7 @@ fun MainNavigationGraph(
             composable(
                 route = "home_screen"
             ){
-                HomeScreen(
-                    navController = navController
-                )
+                MainAppScreen()
             }
 
         }
