@@ -12,19 +12,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.anucodes.medicinetracker.presentation.screens.HomeScreen
+import com.anucodes.medicinetracker.viewmodels.MedicineViewmodel
 
 
 @Composable
 fun CentralNavigation(
+    medicineViewmodel: MedicineViewmodel,
     navController: NavHostController,
     innerPadding: PaddingValues
 ){
     Scaffold(
-//        modifier = Modifier.padding(innerPadding),
         bottomBar = {
             BottomNavigation(
                 navController = navController
             )
+        },
+        floatingActionButton = {
+            
         }
     ) {innerPaddings->
         NavHost(
@@ -32,7 +36,7 @@ fun CentralNavigation(
             startDestination = BottomNavItems.Home.route
         ){
             composable(route = BottomNavItems.Home.route){
-                HomeScreen(innerPaddings)
+                HomeScreen(medicineViewmodel,innerPaddings)
             }
 
             composable(route = BottomNavItems.Schedule.route){

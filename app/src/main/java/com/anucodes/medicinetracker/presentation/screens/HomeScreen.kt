@@ -16,13 +16,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,14 +45,17 @@ import com.anucodes.medicinetracker.presentation.shared.MedicineCategoryChip
 import com.anucodes.medicinetracker.presentation.shared.TopBar
 import com.anucodes.medicinetracker.ui.theme.AppColors
 import com.anucodes.medicinetracker.ui.theme.MedicineTrackerTheme
+import com.anucodes.medicinetracker.viewmodels.MedicineViewmodel
 
 
 @Composable
 fun HomeScreen(
+    medicineViewmodel: MedicineViewmodel,
     innerPadding: PaddingValues
 ){
 
     var showMenu by remember { mutableStateOf(false) }
+    val allMedicines by medicineViewmodel.medicines.collectAsState()
 
     Scaffold(
         topBar = {
@@ -59,8 +65,20 @@ fun HomeScreen(
                 showMenu = true
             }
         },
-        bottomBar = {
-
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = {}
+            ) {
+                Row{
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add button"
+                    )
+                    Text(
+                        text = "Add Med"
+                    )
+                }
+            }
         }
     ) {innerpadding->
         Column(
@@ -72,7 +90,7 @@ fun HomeScreen(
         ) {
             HomeCard()
             Spacer(Modifier.height(10.dp))
-            HomeList()
+            HomeList(allMedicines)
         }
     }
 }

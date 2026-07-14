@@ -1,5 +1,7 @@
 package com.anucodes.medicinetracker.presentation.shared
 
+import android.R.attr.thickness
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,11 +13,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +32,9 @@ import com.anucodes.medicinetracker.ui.theme.AppColors
 
 @Composable
 fun HomeCard(){
+
+    val progressBarThickness = 7.dp
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,7 +81,13 @@ fun HomeCard(){
             text = "doses taken",
             fontSize = 19.sp
         )
-        Spacer(Modifier.height(14.dp))
+        Spacer(Modifier.height(8.dp))
+        LinearProgressIndicator(
+            progress = {0.4f},
+            color = AppColors.ProgressBar,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(8.dp))
         Text(
             text = "40% adherence today",
             color = AppColors.TextDisabled
