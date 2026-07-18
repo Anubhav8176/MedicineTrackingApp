@@ -42,7 +42,10 @@ fun BottomNavigation(
                 alwaysShowLabel = true,
                 selected = currentRoute==item.route,
                 onClick = {
-
+                    navController.navigate(item.route){
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
                 }
             )
         }
