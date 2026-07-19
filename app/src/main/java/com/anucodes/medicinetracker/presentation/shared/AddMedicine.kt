@@ -1,6 +1,7 @@
 package com.anucodes.medicinetracker.presentation.shared
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemGesturesPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
@@ -32,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,17 +51,19 @@ fun AddMedicine(
 ){
     val scope = rememberCoroutineScope()
 
-
     var medicationName by remember { mutableStateOf("") }
     var dose by remember { mutableStateOf("") }
     var instructions by remember { mutableStateOf("") }
-    var time by remember { mutableStateOf("") }
+    var selectedHour by remember { mutableStateOf<Int?>(null) }
+    var selectedMinute by remember { mutableStateOf<Int?>(null) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.7f)
+            .fillMaxHeight(0.75f)
+            .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             .background(AppColors.SurfaceSheet)
+            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = Modifier
@@ -201,25 +207,21 @@ fun AddMedicine(
                     text = "Time",
                     color = AppColors.TextSecondary
                 )
-                OutlinedTextField(
+                SegmentedTimeField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = time,
-                    onValueChange = {
-                        time = it
-                    },
-                    shape = RoundedCornerShape(20.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = AppColors.SurfaceVariant,
-                        unfocusedContainerColor = AppColors.SurfaceVariant,
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent
-                    ),
-                    placeholder = {
-                        Text(
-                            text = "--:--"
-                        )
+                    onTimeChange = { h, m ->
+                        selectedHour = h
+                        selectedMinute = m
                     }
+                )
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 3.dp),
+                    fontSize = 10.sp,
+                    text = "*Enter the time in 24-hour format",
+                    color = AppColors.TextSecondary
                 )
             }
 

@@ -1,6 +1,8 @@
 package com.anucodes.medicinetracker.presentation.screens
 
 import android.view.RoundedCorner
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
@@ -31,6 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.anucodes.medicinetracker.presentation.shared.AddMedicine
 import com.anucodes.medicinetracker.presentation.shared.HomeCard
@@ -92,15 +96,19 @@ fun HomeScreen(
             }
         }
         if(showBottomSheet){
-            AddMedicine(
+            Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp)),
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.4f))
+                    .pointerInput(Unit){
+                        detectTapGestures { onDismissRequest() }
+                    }
+            )
+            AddMedicine(
                 onDismissRequest = {
                     onDismissRequest()
                 }
             )
         }
     }
-
-
 }
