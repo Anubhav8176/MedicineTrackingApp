@@ -47,13 +47,10 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             MedicineTrackerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CentralNavigation(
-                        medicineViewmodel = medicineViewmodel,
-                        navController = navController,
-                        innerPadding
-                    )
-                }
+                CentralNavigation(
+                    medicineViewmodel = medicineViewmodel,
+                    navController = navController
+                )
             }
         }
     }

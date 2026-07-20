@@ -49,7 +49,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anucodes.medicinetracker.presentation.screens.HomeScreen
+import com.anucodes.medicinetracker.presentation.screens.InsightsScreen
 import com.anucodes.medicinetracker.presentation.screens.ScheduleScreen
+import com.anucodes.medicinetracker.presentation.screens.SettingsScreen
 import com.anucodes.medicinetracker.presentation.shared.TopBar
 import com.anucodes.medicinetracker.ui.theme.AppColors
 import com.anucodes.medicinetracker.viewmodels.MedicineViewmodel
@@ -59,8 +61,7 @@ import com.anucodes.medicinetracker.viewmodels.MedicineViewmodel
 @Composable
 fun CentralNavigation(
     medicineViewmodel: MedicineViewmodel,
-    navController: NavHostController,
-    innerPadding: PaddingValues
+    navController: NavHostController
 ){
     var showMenu by remember { mutableStateOf(false) }
 
@@ -115,7 +116,7 @@ fun CentralNavigation(
                 }
             }
         }
-    ) {innerPaddings->
+    ) {innerPadding->
         NavHost(
             navController = navController,
             startDestination = BottomNavItems.Home.route
@@ -123,7 +124,7 @@ fun CentralNavigation(
             composable(route = BottomNavItems.Home.route){
                 HomeScreen(
                     medicineViewmodel,
-                    innerPaddings,
+                    innerPadding,
                     showBottomSheet,
                     onDismissRequest = {
                         showBottomSheet = false
@@ -136,11 +137,11 @@ fun CentralNavigation(
             }
 
             composable(route = BottomNavItems.Insights.route){
-
+                InsightsScreen()
             }
 
             composable(route = BottomNavItems.Settings.route){
-
+                SettingsScreen(innerPadding)
             }
 
         }
