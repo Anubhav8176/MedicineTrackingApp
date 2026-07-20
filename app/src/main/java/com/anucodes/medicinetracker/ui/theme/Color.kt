@@ -79,11 +79,6 @@ object AppColors {
     val GradientMid    = Color(0xFFB2DFDB)   // light teal
     val GradientEnd    = Color(0xFFE0F7FA)   // light cyan
 
-    // ── Phone Chrome (mockup only – not needed in production app) ─────────────
-    val PhoneBezel     = Color(0xFF1A1A1A)
-    val PhoneBezelRing = Color(0xFF333333)
-    val PunchHole      = Color(0xFF0A0A0A)
-
     // ── Switch / Toggle ───────────────────────────────────────────────────────
     val SwitchTrackOn  = Color(0xFF006A60)
     val SwitchTrackOff = Color(0xFFB2CCC8)
