@@ -17,8 +17,8 @@ data class MedicineEntity(
     val instructions: String,
 
     //Schedule
-    val scheduledTime: String,
-    val frequencyDays: String,
+    val scheduledTime: Int,
+    val frequencyDays: String = "Daily",
     val isActive: Boolean = true,
 
     //Basic timestamps

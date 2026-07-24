@@ -90,9 +90,10 @@ fun HomeScreen(
                         selected = false
                     )
                 }
+                Spacer(Modifier.height(10.dp))
             }
             items(allMedicines){medicine->
-                MedicineCard()
+                MedicineCard(medicine)
             }
         }
         if(showBottomSheet){
@@ -105,6 +106,7 @@ fun HomeScreen(
                     }
             )
             AddMedicine(
+                medicineViewmodel = medicineViewmodel,
                 onDismissRequest = {
                     onDismissRequest()
                 }

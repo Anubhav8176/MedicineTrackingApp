@@ -23,20 +23,7 @@ import com.anucodes.medicinetracker.viewmodels.MedicineViewmodelFactory
 class MainActivity : ComponentActivity() {
 
     private val medicineViewmodel: MedicineViewmodel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return MedicineViewmodel(medicineDao = getDb().MedicineDao()) as T
-            }
-        }
-    }
-
-    private fun getDb(): MedicineDatabase {
-        return Room.databaseBuilder(
-            applicationContext,
-            MedicineDatabase::class.java,
-            "medicine_database"
-        ).build()
+        MedicineViewmodelFactory(MedicineDatabase.getDb(this).MedicineDao())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

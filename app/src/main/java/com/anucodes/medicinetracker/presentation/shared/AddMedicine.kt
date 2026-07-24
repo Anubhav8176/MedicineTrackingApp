@@ -40,13 +40,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anucodes.medicinetracker.room.MedicineEntity
 import com.anucodes.medicinetracker.ui.theme.AppColors
+import com.anucodes.medicinetracker.viewmodels.MedicineViewmodel
+import com.anucodes.medicinetracker.viewmodels.toMinutesOfDay
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddMedicine(
     modifier: Modifier = Modifier,
+    medicineViewmodel: MedicineViewmodel,
     onDismissRequest: ()-> Unit
 ){
     val scope = rememberCoroutineScope()
@@ -236,6 +240,24 @@ fun AddMedicine(
                 ),
                 onClick = {
                     /*Add the Medication to the Room*/
+                    if (
+                        selectedHour != null &&
+                        selectedMinute!=null &&
+                        medicationName.isNotEmpty() &&
+                        dose.isNotEmpty() &&
+                        instructions.isNotEmpty()
+                        ){
+                        val newMedication = MedicineEntity(
+                            name = medicationName,
+                            dose = dose,
+                            instructions = instructions,
+                            isActive = true,
+                            scheduledTime = toMinutesOfDay(selectedHour!!, selectedMinute!!),
+                            categories = "Daily"
+                        )
+
+                        medicineViewmodel.addNewMedicine(newMedication)
+                    }
                 }
             ) {
                 Text(

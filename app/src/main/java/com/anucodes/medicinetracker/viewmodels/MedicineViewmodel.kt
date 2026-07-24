@@ -25,8 +25,29 @@ class MedicineViewmodel(private val medicineDao: MedicineDao): ViewModel(){
                     _medicines.value = medicineList
                 }
             }catch (e: Exception){
-                Log.e("Medicine DB", "The error is ${e.cause}")
+                Log.e("Medicine DB", "The error is ${e.message}")
             }
         }
     }
+
+    fun addNewMedicine(medicineEntity: MedicineEntity){
+        viewModelScope.launch {
+            try {
+                medicineDao.addMedicine(medicineEntity)
+            }catch (e: Exception){
+                Log.e("Medicine DB", "The error is ${e.message}")
+            }
+        }
+    }
+}
+
+
+//Utility functions
+fun toMinutesOfDay(hour: Int, minutes: Int): Int = hour*60 + minutes
+
+fun fromMinutesOfDay(minutesOfDay: Int): Pair<Int, Int>{
+    val hour = minutesOfDay/60
+    val minute = minutesOfDay%60
+
+    return hour to minute
 }
