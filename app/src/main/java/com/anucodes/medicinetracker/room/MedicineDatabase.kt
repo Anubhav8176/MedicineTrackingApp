@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [MedicineEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class MedicineDatabase: RoomDatabase() {
@@ -23,7 +23,7 @@ abstract class MedicineDatabase: RoomDatabase() {
                     MedicineDatabase::class.java,
                     "medicine_database"
                 )
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration(true)
                     .build()
                 INSTANCE = instance
                 instance

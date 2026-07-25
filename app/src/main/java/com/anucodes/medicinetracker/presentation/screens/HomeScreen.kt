@@ -93,7 +93,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(10.dp))
             }
             items(allMedicines){medicine->
-                MedicineCard(medicine)
+                MedicineCard(medicine, medicineViewmodel)
             }
         }
         if(showBottomSheet){

@@ -18,10 +18,13 @@ data class MedicineEntity(
 
     //Schedule
     val scheduledTime: Int,
-    val frequencyDays: String = "Daily",
+    val frequencyDays: Int,
     val isActive: Boolean = true,
 
     //Basic timestamps
     val createdAt: Long = System.currentTimeMillis(),
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+
+    //Verify taken
+    val isTaken: Boolean = false
 )

@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import com.anucodes.medicinetracker.room.MedicineEntity
 import com.anucodes.medicinetracker.ui.theme.AppColors
 import com.anucodes.medicinetracker.viewmodels.MedicineViewmodel
@@ -55,11 +57,14 @@ fun AddMedicine(
 ){
     val scope = rememberCoroutineScope()
 
+    //UI states
     var medicationName by remember { mutableStateOf("") }
     var dose by remember { mutableStateOf("") }
     var instructions by remember { mutableStateOf("") }
     var selectedHour by remember { mutableStateOf<Int?>(null) }
     var selectedMinute by remember { mutableStateOf<Int?>(null) }
+    var category by remember { mutableStateOf("") }
+    var frequencyDays by remember { mutableIntStateOf(1) }
 
     Column(
         modifier = Modifier
@@ -208,6 +213,78 @@ fun AddMedicine(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 3.dp),
+                    text = "Categories",
+                    color = AppColors.TextSecondary
+                )
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = category,
+                    onValueChange = {
+                        category = it
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = AppColors.SurfaceVariant,
+                        unfocusedContainerColor = AppColors.SurfaceVariant,
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent
+                    ),
+                    placeholder = {
+                        Text(
+                            text = "eg. Diabetes, BP, Protein, Gym etc."
+                        )
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 3.dp),
+                    text = "Days",
+                    color = AppColors.TextSecondary
+                )
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = frequencyDays.toString(),
+                    onValueChange = {
+                        if (it.isNotEmpty() and it.isDigitsOnly()){
+                            frequencyDays = it.toInt()
+                        }
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = AppColors.SurfaceVariant,
+                        unfocusedContainerColor = AppColors.SurfaceVariant,
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent
+                    ),
+                    placeholder = {
+                        Text(
+                            text = "eg. 1, 2, 3 etc"
+                        )
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 3.dp),
                     text = "Time",
                     color = AppColors.TextSecondary
                 )
@@ -245,7 +322,9 @@ fun AddMedicine(
                         selectedMinute!=null &&
                         medicationName.isNotEmpty() &&
                         dose.isNotEmpty() &&
-                        instructions.isNotEmpty()
+                        instructions.isNotEmpty() &&
+                        frequencyDays != 0 &&
+                        category.isNotEmpty()
                         ){
                         val newMedication = MedicineEntity(
                             name = medicationName,
@@ -253,7 +332,8 @@ fun AddMedicine(
                             instructions = instructions,
                             isActive = true,
                             scheduledTime = toMinutesOfDay(selectedHour!!, selectedMinute!!),
-                            categories = "Daily"
+                            categories = category,
+                            frequencyDays = frequencyDays,
                         )
 
                         medicineViewmodel.addNewMedicine(newMedication)

@@ -8,6 +8,7 @@ import com.anucodes.medicinetracker.room.MedicineEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class MedicineViewmodel(private val medicineDao: MedicineDao): ViewModel(){
 
@@ -18,13 +19,32 @@ class MedicineViewmodel(private val medicineDao: MedicineDao): ViewModel(){
         getAllMedicines()
     }
 
-    fun getAllMedicines(){
+    fun getAllMedicines() {
         viewModelScope.launch {
             try {
-                medicineDao.getAllMedicine().collect {medicineList->
-                    _medicines.value = medicineList
+                medicineDao.getAllMedicine().collect { medicineList ->
+                    val tempMedicineList = mutableListOf<MedicineEntity>()
+
+                    medicineList.forEach { medicine ->
+                        var isTaken = medicine.isTaken
+
+                        if (medicine.isTaken) {
+                            val nextDueTime = medicine.updatedAt +
+                                    TimeUnit.DAYS.toMillis(medicine.frequencyDays.toLong())
+
+                            if (nextDueTime < System.currentTimeMillis()) {
+                                medicineDao.updateIsTaken(isTaken = false, medicine.id)
+                                isTaken = false
+                            }
+                        }
+                        Log.i("MedicineVM", "The data is $isTaken")
+
+                        tempMedicineList.add(medicine.copy(isTaken = isTaken))
+                    }
+
+                    _medicines.value = tempMedicineList
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("Medicine DB", "The error is ${e.message}")
             }
         }
@@ -34,6 +54,16 @@ class MedicineViewmodel(private val medicineDao: MedicineDao): ViewModel(){
         viewModelScope.launch {
             try {
                 medicineDao.addMedicine(medicineEntity)
+            }catch (e: Exception){
+                Log.e("Medicine DB", "The error is ${e.message}")
+            }
+        }
+    }
+
+    fun updateMedicine(medicine: MedicineEntity){
+        viewModelScope.launch {
+            try {
+                medicineDao.updateMedicine(medicine = medicine)
             }catch (e: Exception){
                 Log.e("Medicine DB", "The error is ${e.message}")
             }

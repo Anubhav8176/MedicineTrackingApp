@@ -32,17 +32,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anucodes.medicinetracker.room.MedicineEntity
 import com.anucodes.medicinetracker.ui.theme.AppColors
+import com.anucodes.medicinetracker.viewmodels.MedicineViewmodel
 import com.anucodes.medicinetracker.viewmodels.fromMinutesOfDay
 
 
 @Composable
 fun MedicineCard(
-    medicine: MedicineEntity
+    medicine: MedicineEntity,
+    medicineViewmodel: MedicineViewmodel
 ){
-
-    //Add the radio button option for the medicines list fetch from the database.
     //Also add the Taken, Due etc.; tag to all the medicines
-    //Also the text decoration when done marked.
     var isTaken by remember { mutableStateOf(false) }
     val time by remember { mutableStateOf(fromMinutesOfDay(medicine.scheduledTime)) }
 
@@ -62,7 +61,7 @@ fun MedicineCard(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                modifier = Modifier.weight(1f), // <-- key fix
+                modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -78,17 +77,21 @@ fun MedicineCard(
                     Text(
                         text = medicine.name,
                         fontWeight = FontWeight.Bold,
-                        textDecoration = if(isTaken) TextDecoration.LineThrough else TextDecoration.None
+                        textDecoration = if(medicine.isTaken) TextDecoration.LineThrough else TextDecoration.None
                     )
                     Text(fontSize = 13.sp, text = "${medicine.dose} . ${medicine.categories}")
-                    Text(fontSize = 13.sp, text = "${time.first}, ${time.second}" )
+                    Text(fontSize = 13.sp, text = "${time.first}: ${time.second}" )
                 }
             }
 
-            IconButton(onClick = { isTaken = !isTaken }) {
+            IconButton(onClick = {
+                isTaken = !isTaken
+                val newMedicine = medicine.copy(isTaken = isTaken)
+                medicineViewmodel.updateMedicine(medicine = newMedicine)
+            }) {
                 Icon(
-                    imageVector = if (isTaken) Icons.Outlined.CheckCircle else Icons.Outlined.Circle,
-                    contentDescription = if (isTaken) "Checked circle" else "Unchecked circle",
+                    imageVector = if (medicine.isTaken) Icons.Outlined.CheckCircle else Icons.Outlined.Circle,
+                    contentDescription = if (medicine.isTaken) "Checked circle" else "Unchecked circle",
                     tint = AppColors.Primary
                 )
             }
