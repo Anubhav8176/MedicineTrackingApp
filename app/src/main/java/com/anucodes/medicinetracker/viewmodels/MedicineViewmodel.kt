@@ -1,6 +1,7 @@
 package com.anucodes.medicinetracker.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anucodes.medicinetracker.room.MedicineDao
@@ -37,7 +38,6 @@ class MedicineViewmodel(private val medicineDao: MedicineDao): ViewModel(){
                                 isTaken = false
                             }
                         }
-                        Log.i("MedicineVM", "The data is $isTaken")
 
                         tempMedicineList.add(medicine.copy(isTaken = isTaken))
                     }

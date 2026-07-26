@@ -65,7 +65,7 @@ fun HomeScreen(
                 .padding(horizontal = 10.dp, vertical = 10.dp)
         ) {
             item {
-                HomeCard()
+                HomeCard(medicineViewmodel = medicineViewmodel)
                 Spacer(Modifier.height(10.dp))
             }
 

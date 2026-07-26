@@ -1,6 +1,9 @@
 package com.anucodes.medicinetracker.presentation.shared
 
 import android.R.attr.thickness
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -19,6 +22,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -28,12 +35,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anucodes.medicinetracker.ui.theme.AppColors
+import com.anucodes.medicinetracker.viewmodels.MedicineViewmodel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
+import com.anucodes.medicinetracker.presentation.utilities.getMedSize
+import com.anucodes.medicinetracker.presentation.utilities.getTakenMedSize
 
 
+@SuppressLint("NonObservableLocale")
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeCard(){
+fun HomeCard(
+    medicineViewmodel: MedicineViewmodel
+) {
 
-    val progressBarThickness = 7.dp
+    val currentDate = LocalDate.now()
+    val formatter = DateTimeFormatter.ofPattern("EEEE, MMM d", LocalLocale.current.platformLocale)
+    val formattedDate = currentDate.format(formatter)
+
+    val medicines by medicineViewmodel.medicines.collectAsState()
+
+    val takenMedSize = getTakenMedSize(medicines)
+    val medSize = getMedSize(medicines)
+
+    val takenFraction = remember(takenMedSize, medSize) {
+        if (medSize == 0) 0f else takenMedSize.toFloat() / medSize.toFloat()
+    }
+    val takenPercent = remember(takenFraction) {
+        (takenFraction * 100).toInt()
+    }
 
     Card(
         modifier = Modifier
@@ -60,7 +92,7 @@ fun HomeCard(){
                 .background(Color.Transparent)
         ) {
             Text(
-                text = "Friday, Jul 3",
+                text = formattedDate,
                 color = AppColors.TextDisabled
             )
             Spacer(Modifier.weight(1f))
@@ -72,7 +104,7 @@ fun HomeCard(){
         }
         Spacer(Modifier.height(10.dp))
         Text(
-            text = "2 of 5",
+            text = "$takenMedSize of $medSize",
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold
         )
@@ -83,13 +115,13 @@ fun HomeCard(){
         )
         Spacer(Modifier.height(8.dp))
         LinearProgressIndicator(
-            progress = {0.4f},
+            progress = { takenFraction },
             color = AppColors.ProgressBar,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "40% adherence today",
+            text = "$takenPercent% adherence today",
             color = AppColors.TextDisabled
         )
     }
