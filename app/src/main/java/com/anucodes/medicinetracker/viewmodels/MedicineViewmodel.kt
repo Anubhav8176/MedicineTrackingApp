@@ -64,6 +64,7 @@ class MedicineViewmodel(private val medicineDao: MedicineDao): ViewModel(){
         viewModelScope.launch {
             try {
                 medicineDao.updateMedicine(medicine = medicine)
+                Log.i("Medicine Home: ", "New Medicine: $medicine")
             }catch (e: Exception){
                 Log.e("Medicine DB", "The error is ${e.message}")
             }
