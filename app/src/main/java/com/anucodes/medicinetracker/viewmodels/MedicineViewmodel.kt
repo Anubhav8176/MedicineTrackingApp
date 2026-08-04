@@ -60,6 +60,17 @@ class MedicineViewmodel(private val medicineDao: MedicineDao): ViewModel(){
         }
     }
 
+    fun updateMedicineWithId(id: Long, isTaken: Boolean){
+        viewModelScope.launch {
+            try {
+                medicineDao.updateIsTaken(isTaken = isTaken, medicineId = id)
+                Log.i("Medicine Home: ", "isTaken: $isTaken")
+            }catch (e: Exception){
+                Log.e("Medicine DB", "The error is ${e.message}")
+            }
+        }
+    }
+
     fun updateMedicine(medicine: MedicineEntity){
         viewModelScope.launch {
             try {

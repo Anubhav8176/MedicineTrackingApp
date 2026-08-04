@@ -86,8 +86,7 @@ fun MedicineCard(
 
             IconButton(onClick = {
                 isTaken = !isTaken
-                val newMedicine = medicine.copy(isTaken = isTaken)
-                medicineViewmodel.updateMedicine(medicine = newMedicine)
+                medicineViewmodel.updateMedicineWithId(id = medicine.id, isTaken = isTaken)
             }) {
                 Icon(
                     imageVector = if (medicine.isTaken) Icons.Outlined.CheckCircle else Icons.Outlined.Circle,
