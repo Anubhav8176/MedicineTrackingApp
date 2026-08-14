@@ -18,6 +18,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +42,15 @@ fun HomeScreen(
     onDismissRequest: ()-> Unit
 ){
     val allMedicines by medicineViewmodel.medicines.collectAsState()
+
+    var selectedFilter by remember { mutableStateOf("Home") }
+    var medicineList by remember { mutableStateOf(allMedicines) }
+
+    val filterOptions = listOf(
+        "Home",
+        "Remaining",
+        "Taken"
+    )
 
     Box(
         modifier = Modifier
@@ -62,24 +74,20 @@ fun HomeScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    MedicineCategoryChip(
-                        title = "Home",
-                        selected = true
-                    )
 
-                    MedicineCategoryChip(
-                        title = "Remaining",
-                        selected = false
-                    )
-
-                    MedicineCategoryChip(
-                        title = "Taken",
-                        selected = false
-                    )
+                    filterOptions.forEach {name->
+                        MedicineCategoryChip(
+                            title = name,
+                            selected = if(name==selectedFilter)true else false,
+                            onClick = {new->
+                                selectedFilter = new
+                            }
+                        )
+                    }
                 }
                 Spacer(Modifier.height(10.dp))
             }
-            items(allMedicines){medicine->
+            items(medicineList){medicine->
                 MedicineCard(medicine, medicineViewmodel)
             }
         }
