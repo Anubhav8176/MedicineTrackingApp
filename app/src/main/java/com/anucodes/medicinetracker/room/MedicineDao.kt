@@ -19,8 +19,8 @@ interface MedicineDao{
     @Query("SELECT * FROM medicine")
     fun getAllMedicine(): Flow<List<MedicineEntity>>
 
-    @Query("UPDATE medicine SET isTaken = :isTaken WHERE id = :medicineId")
-    suspend fun updateIsTaken(isTaken: Boolean, medicineId: Long)
+    @Query("UPDATE medicine SET isTaken = :isTaken, updatedAt = :updatedAt WHERE id = :medicineId")
+    suspend fun updateIsTaken(isTaken: Boolean, updatedAt: Long, medicineId: Long)
 
     @Update
     suspend fun updateMedicine(medicine: MedicineEntity)

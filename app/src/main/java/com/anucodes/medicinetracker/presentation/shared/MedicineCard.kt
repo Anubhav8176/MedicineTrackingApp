@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +41,6 @@ fun MedicineCard(
     medicineViewmodel: MedicineViewmodel
 ){
     //Also add the Taken, Due etc.; tag to all the medicines
-    var isTaken by remember { mutableStateOf(false) }
     val time by remember { mutableStateOf(fromMinutesOfDay(medicine.scheduledTime)) }
 
     Card(
@@ -85,8 +83,7 @@ fun MedicineCard(
             }
 
             IconButton(onClick = {
-                isTaken = !isTaken
-                medicineViewmodel.updateMedicineWithId(id = medicine.id, isTaken = isTaken)
+                medicineViewmodel.updateMedicineWithId(id = medicine.id, isTaken = !medicine.isTaken)
             }) {
                 Icon(
                     imageVector = if (medicine.isTaken) Icons.Outlined.CheckCircle else Icons.Outlined.Circle,

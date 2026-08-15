@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +46,10 @@ fun HomeScreen(
 
     var selectedFilter by remember { mutableStateOf("Home") }
     var medicineList by remember { mutableStateOf(allMedicines) }
+
+    LaunchedEffect(allMedicines) {
+        medicineList = allMedicines
+    }
 
     val filterOptions = listOf(
         "Home",

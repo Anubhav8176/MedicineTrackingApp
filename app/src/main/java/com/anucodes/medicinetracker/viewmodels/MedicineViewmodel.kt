@@ -34,7 +34,7 @@ class MedicineViewmodel(private val medicineDao: MedicineDao): ViewModel(){
                                     TimeUnit.DAYS.toMillis(medicine.frequencyDays.toLong())
 
                             if (nextDueTime < System.currentTimeMillis()) {
-                                medicineDao.updateIsTaken(isTaken = false, medicine.id)
+                                medicineDao.updateIsTaken(isTaken = false, updatedAt = System.currentTimeMillis(), medicineId = medicine.id)
                                 isTaken = false
                             }
                         }
@@ -63,7 +63,11 @@ class MedicineViewmodel(private val medicineDao: MedicineDao): ViewModel(){
     fun updateMedicineWithId(id: Long, isTaken: Boolean){
         viewModelScope.launch {
             try {
-                medicineDao.updateIsTaken(isTaken = isTaken, medicineId = id)
+                medicineDao.updateIsTaken(
+                    isTaken = isTaken,
+                    updatedAt = System.currentTimeMillis(),
+                    medicineId = id
+                )
                 Log.i("Medicine Home: ", "isTaken: $isTaken")
             }catch (e: Exception){
                 Log.e("Medicine DB", "The error is ${e.message}")
