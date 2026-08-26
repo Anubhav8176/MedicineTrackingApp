@@ -133,7 +133,9 @@ fun CentralNavigation(
             }
 
             composable(route = BottomNavItems.Schedule.route){
-                ScheduleScreen()
+                ScheduleScreen(
+                    innerPadding = innerPadding
+                )
             }
 
             composable(route = BottomNavItems.Insights.route){
